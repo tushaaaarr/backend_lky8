@@ -72,15 +72,12 @@ def get_packages(request):
 
 
 @api_view(['GET'])
-def user_orders(request, id):
-    user = get_object_or_404(UserInfo, id=id)
-    orders = Order.objects.filter(user=user)
-    order_serializer = OrderSerializer(orders, many=True)
+def get_order_details(request, order_id):
+    order = get_object_or_404(Order, order_id=order_id)
+    order_serializer = OrderSerializer(order)
     return Response({
-        "user_info": UserInfoSerializer(user).data,
-        "orders": order_serializer.data
+        "order": order_serializer.data
     })
-
 
 
 
@@ -101,7 +98,7 @@ def create_nowpayments_crypto_payment(fiat_amount, fiat_currency, crypto_currenc
         "order_description": f"Payment for booking {booking_id}",
         "is_fixed_rate": True  # Ensures exact crypto amount is required
     }
-    
+
     response = requests.post(url, json=payload, headers=headers)
     response_data = response.json()
     print(response_data)
@@ -282,7 +279,7 @@ def userinfo_with_orders(request):
             user = user_serializer.save()
         else:
             user_serializer = UserInfoSerializer(user)
-            
+
         # ✅ Create the order (Extract price details from Package)
         order_data = request.data.get("order", {})
         order, order_errors = create_order(user.id, order_data)
@@ -325,10 +322,10 @@ def userinfo_with_orders(request):
 
         return Response({
             "status_code": status.HTTP_201_CREATED,
-            "message": "✅ Your order has been initiated! Redirecting to the payment window...",
+            "message": "Your order has been initiated! Redirecting to the payment window...",
             "data": {
                 "user_info": user_serializer.data,
-                "order": OrderSerializer(order).data,
+                "order_id": order.order_id,
                 "payment_url": str(payment.invoice_url)
             }
         }, status=status.HTTP_201_CREATED)
