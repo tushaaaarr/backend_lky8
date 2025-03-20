@@ -71,14 +71,18 @@ def get_packages(request):
     return Response(serialized_packages)
 
 
-@api_view(['GET'])
-def get_order_details(request, order_id):
+@csrf_exempt  # ✅ Disable CSRF protection
+@api_view(['POST'])  
+def get_order_details(request):
+    order_id = request.data.get("order_id")  # ✅ Fetch order_id from request body
+    if not order_id:
+        return Response({"error": "Order ID is required"}, status=400)
+
     order = get_object_or_404(Order, order_id=order_id)
     order_serializer = OrderSerializer(order)
     return Response({
         "order": order_serializer.data
     })
-
 
 
 def create_nowpayments_crypto_payment(fiat_amount, fiat_currency, crypto_currency, booking_id):
@@ -251,6 +255,7 @@ def create_order(user_id, order_data):
         return None, {"error": str(e)}
 
 
+@csrf_exempt  # ✅ Disable CSRF protection
 @api_view(['POST'])
 def userinfo_with_orders(request):
     with transaction.atomic():
