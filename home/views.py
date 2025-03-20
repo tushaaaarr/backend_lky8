@@ -71,6 +71,19 @@ def get_packages(request):
     return Response(serialized_packages)
 
 
+@api_view(['GET'])
+def user_orders(request, id):
+    user = get_object_or_404(UserInfo, id=id)
+    orders = Order.objects.filter(user=user)
+    order_serializer = OrderSerializer(orders, many=True)
+    return Response({
+        "user_info": UserInfoSerializer(user).data,
+        "orders": order_serializer.data
+    })
+
+
+
+
 def create_nowpayments_crypto_payment(fiat_amount, fiat_currency, crypto_currency, booking_id):
     url = f"{NOWPAYMENTS_API_BASE}/invoice"
     headers = {
@@ -81,9 +94,9 @@ def create_nowpayments_crypto_payment(fiat_amount, fiat_currency, crypto_currenc
         "price_amount": float(fiat_amount),  # Convert fiat amount to float
         "price_currency": fiat_currency,  # Fiat currency (USD, EUR, etc.)
         "pay_currency": crypto_currency,  # Crypto currency (BTC, ETH, USDT, etc.)
-        "ipn_callback_url": "http://16.171.0.81:9000/payments/webhook/check-status/",
-        "success_url": f"http://16.171.0.81:8000/booking/payment/success/",
-        "cancel_url": f"http://16.171.0.81:8000/booking/payment/failure/",
+        "ipn_callback_url": "https://api.lky8.win/lky8/webhook/check-payment-status/",
+        "success_url": f"https://lky8.win/payment/success",
+        "cancel_url": f"https://lky8.win/payment/failure/",
         "order_id": booking_id,
         "order_description": f"Payment for booking {booking_id}",
         "is_fixed_rate": True  # Ensures exact crypto amount is required
@@ -275,7 +288,6 @@ def userinfo_with_orders(request):
         order, order_errors = create_order(user.id, order_data)
         order.status = "pending"
         order.save()
-
         if not order:
             return Response({
                 "status_code": status.HTTP_400_BAD_REQUEST,
@@ -424,15 +436,6 @@ def payment_webhook(request):
         logger.error(f"Webhook processing error: {str(e)}", exc_info=True)
         return JsonResponse({"error": "Internal server error"}, status=500)
 
-@api_view(['GET'])
-def user_orders(request, id):
-    user = get_object_or_404(UserInfo, id=id)
-    orders = Order.objects.filter(user=user)
-    order_serializer = OrderSerializer(orders, many=True)
-    return Response({
-        "user_info": UserInfoSerializer(user).data,
-        "orders": order_serializer.data
-    })
 
 
 

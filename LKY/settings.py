@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-$ttfh8zojv)62$%%ain45mux&7vu=j6biz_6e9m@t$2v&quaim
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'home',
+    'corsheaders', # cores settings
+
 
 ]
 
@@ -50,6 +52,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+
 ]
 
 ROOT_URLCONF = 'LKY.urls'
@@ -124,3 +128,57 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+
+SECURE_HSTS_SECONDS = 3600
+SECURE_BROWSER_XSS_FILTER = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
+
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+]
+SITE_ID = 1
+CORS_ALLOW_ALL_ORIGINS = True  # Keep this True for local development
+CORS_ALLOW_CREDENTIALS = True
+
+CORS_ORIGIN_WHITELIST = (
+    'http://localhost:3000',
+    'http://127.0.0.1:3000',
+    "https://lky8.win",
+    "https://www.lky8.win",
+    "https://api.lky8.win",
+)
+
+
+# Consolidated CSRF configuration
+CSRF_COOKIE_HTTPONLY = True
+CSRF_COOKIE_SECURE = False  # Set to False for local dev (unless using HTTPS locally)
+CSRF_COOKIE_SAMESITE = 'Lax'  # or 'Strict' to prevent issues in local testing
+
+# Session cookie settings
+SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_SECURE = False  # Set to False for local dev (unless using HTTPS locally)
+SESSION_COOKIE_SAMESITE = 'Lax'  # or 'Strict' to prevent issues in local testing
+
+# Secure headers
+SECURE_BROWSER_XSS_FILTER = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
+
+# Consolidated CORS_ALLOW_METHODS
+CORS_ALLOW_METHODS = [
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+]
