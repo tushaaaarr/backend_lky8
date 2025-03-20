@@ -388,12 +388,12 @@ def payment_webhook(request):
         pay_currency = payload.get("pay_currency")
         pay_amount = payload.get("pay_amount")
         actually_paid = payload.get("actually_paid")
-
+        
         logger.debug(f"Processing payment for order: {order_id}, status: {payment_status}")
 
         # Fetch Order and Payment Record
         order = Order.objects.filter(order_id=order_id).first()
-        print(order)
+
         if not order:
             logger.debug(f"No order found for order_id: {order_id}")
             return JsonResponse({"error": "Order not found"}, status=404)

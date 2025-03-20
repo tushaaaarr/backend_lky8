@@ -1,0 +1,6 @@
+INFO 2025-03-20 13:40:45,809 autoreload Watching for file changes with StatReloader
+INFO 2025-03-20 13:40:54,216 basehttp "GET /admin/home/order/7/change/ HTTP/1.1" 200 17143
+INFO 2025-03-20 13:40:54,252 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+WARNING 2025-03-20 13:40:54,285 log Not Found: /favicon.ico
+WARNING 2025-03-20 13:40:54,285 basehttp "GET /favicon.ico HTTP/1.1" 404 3300
+INFO 2025-03-20 13:40:54,285 basehttp - Broken pipe from ('127.0.0.1', 51721)
