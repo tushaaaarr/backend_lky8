@@ -348,7 +348,7 @@ def userinfo_with_orders(request):
 
 
 logger = logging.getLogger(__name__)
-
+from decimal import Decimal, ROUND_DOWN
 
 @csrf_exempt
 def payment_webhook(request):
@@ -387,8 +387,8 @@ def payment_webhook(request):
         payout_tx_hash = payload.get("payout_hash")
         pay_currency = payload.get("pay_currency")
         pay_amount = payload.get("pay_amount")
-        actually_paid = payload.get("actually_paid")
-        
+        actually_paid = payload.get("actually_paid", 0)  # Default to 0 if None
+
         logger.debug(f"Processing payment for order: {order_id}, status: {payment_status}")
 
         # Fetch Order and Payment Record
@@ -414,7 +414,7 @@ def payment_webhook(request):
         payment.status = payment_status
         payment.price_amount = price_amount
         payment.price_currency = price_currency
-        payment.paid_crypto_amount = actually_paid
+        payment.paid_crypto_amount = Decimal(str(actually_paid)).quantize(Decimal("0.00000000"), rounding=ROUND_DOWN)
         payment.save()
 
         # Handle Payment Statuses
