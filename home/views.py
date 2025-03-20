@@ -388,7 +388,7 @@ def payment_webhook(request):
         pay_currency = payload.get("pay_currency")
         pay_amount = payload.get("pay_amount")
         actually_paid = payload.get("actually_paid", 0)  # Default to 0 if None
-
+        
         logger.debug(f"Processing payment for order: {order_id}, status: {payment_status}")
 
         # Fetch Order and Payment Record

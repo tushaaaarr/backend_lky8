@@ -32,3 +32,22 @@ WARNING 2025-03-20 15:07:32,821 log Not Found: /
 WARNING 2025-03-20 15:07:32,947 log Not Found: /
 WARNING 2025-03-20 15:12:05,834 log Method Not Allowed: /create-order/
 WARNING 2025-03-20 15:14:27,911 log Not Found: /
+INFO 2025-03-20 15:27:32,092 autoreload Watching for file changes with StatReloader
+WARNING 2025-03-20 15:29:32,664 log Bad Request: /lky8/webhook/check-payment-status/
+WARNING 2025-03-20 15:29:32,665 basehttp "POST /lky8/webhook/check-payment-status/ HTTP/1.1" 400 30
+INFO 2025-03-20 15:29:45,865 autoreload /Users/tushaaaarr/Desktop/LKY8/backend/home/views.py changed, reloading.
+INFO 2025-03-20 15:29:46,287 autoreload Watching for file changes with StatReloader
+INFO 2025-03-20 15:29:49,487 basehttp "POST /lky8/webhook/check-payment-status/ HTTP/1.1" 200 17
+INFO 2025-03-20 15:30:12,089 basehttp "GET /admin/ HTTP/1.1" 200 8465
+WARNING 2025-03-20 15:30:12,208 log Not Found: /favicon.ico
+INFO 2025-03-20 15:30:12,208 basehttp - Broken pipe from ('127.0.0.1', 56065)
+INFO 2025-03-20 15:30:14,387 basehttp "GET /admin/home/cryptopayment/ HTTP/1.1" 200 16161
+INFO 2025-03-20 15:30:14,416 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-03-20 15:30:17,121 basehttp "GET /admin/home/cryptopayment/14/change/ HTTP/1.1" 200 24916
+INFO 2025-03-20 15:30:17,155 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-03-20 15:30:17,170 basehttp "GET /static/admin/css/widgets.css HTTP/1.1" 200 11564
+INFO 2025-03-20 15:30:17,170 basehttp - Broken pipe from ('127.0.0.1', 56067)
+INFO 2025-03-20 15:31:05,199 autoreload /Users/tushaaaarr/Desktop/LKY8/backend/home/views.py changed, reloading.
+INFO 2025-03-20 15:31:05,597 autoreload Watching for file changes with StatReloader
+INFO 2025-03-20 15:31:13,016 autoreload /Users/tushaaaarr/Desktop/LKY8/backend/home/views.py changed, reloading.
+INFO 2025-03-20 15:31:13,345 autoreload Watching for file changes with StatReloader
