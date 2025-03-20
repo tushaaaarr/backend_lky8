@@ -96,7 +96,7 @@ def create_nowpayments_crypto_payment(fiat_amount, fiat_currency, crypto_currenc
         "price_currency": fiat_currency,  # Fiat currency (USD, EUR, etc.)
         "pay_currency": crypto_currency,  # Crypto currency (BTC, ETH, USDT, etc.)
         "ipn_callback_url": "https://api.lky8.win/lky8/webhook/check-payment-status/",
-        "success_url": f"https://lky8.win/payment/success",
+        "success_url": f"https://lky8.win/payment/success/{booking_id}",
         "cancel_url": f"https://lky8.win/payment/failure/",
         "order_id": booking_id,
         "order_description": f"Payment for booking {booking_id}",
@@ -359,22 +359,22 @@ def payment_webhook(request):
         logger.debug(f"Webhook received: {payload}")
 
         # Validate the X-NOWPayments-Sig header
-        # x_signature = request.headers.get("X-NowPayments-Sig")
-        # if not x_signature:
-        #     logger.debug("Missing signature")
-        #     return JsonResponse({"error": "Missing signature"}, status=400)
+        x_signature = request.headers.get("X-NowPayments-Sig")
+        if not x_signature:
+            logger.debug("Missing signature")
+            return JsonResponse({"error": "Missing signature"}, status=400)
         
-        # # Validate signature
-        # sorted_payload = json.dumps(payload, separators=(",", ":"), sort_keys=True)
-        # digest = hmac.new(
-        #     NOWPAYMENTS_SECRET_KEY.encode(),
-        #     sorted_payload.encode(),
-        #     hashlib.sha512,
-        # ).hexdigest()
+        # Validate signature
+        sorted_payload = json.dumps(payload, separators=(",", ":"), sort_keys=True)
+        digest = hmac.new(
+            NOWPAYMENTS_SECRET_KEY.encode(),
+            sorted_payload.encode(),
+            hashlib.sha512,
+        ).hexdigest()
 
-        # if digest != x_signature:
-        #     logger.debug("Invalid signature")
-        #     return JsonResponse({"error": "Invalid signature"}, status=400)
+        if digest != x_signature:
+            logger.debug("Invalid signature")
+            return JsonResponse({"error": "Invalid signature"}, status=400)
 
         # Extract required fields
         order_id = payload.get("order_id")
@@ -422,6 +422,7 @@ def payment_webhook(request):
             order.status = "completed"
             order.save()
             logger.debug(f"Payment {order_id} completed successfully.")
+
         elif payment_status in ["failed", "expired"]:  # ❌ Failed Payment
             logger.debug(f"Payment {order_id} failed or expired.")
         elif payment_status in ["waiting", "confirming"]:  # ⏳ Payment Pending
