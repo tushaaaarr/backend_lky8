@@ -47,14 +47,26 @@ def fiat_crypto_nowpayments(amount, currency_from, currency_to, retries=3, delay
 def get_packages(request):
     packages = Package.objects.all()
     serialized_packages = []
+
     for package in packages:
         try:
+            # Fetch real-time crypto amount
             updated_crypto_amount = fiat_crypto_nowpayments(package.fiat_amount, package.fiat_currency, package.crypto_currency)
-            package.crypto_amount = updated_crypto_amount  # Update the crypto amount dynamically
+            package.crypto_amount = updated_crypto_amount  # Update dynamically
+            
+            # Generate a dynamic message
+            message = f"Get {package.entries} entries for just {updated_crypto_amount} {package.crypto_currency}!"
         except Exception as e:
-            package.crypto_amount = package.crypto_amount  # Fallback to stored crypto amount if API fails
+            # Use the stored crypto amount if API fails
+            updated_crypto_amount = package.crypto_amount
+            message = f"Get {package.entries} entries for just {package.crypto_amount} {package.crypto_currency}!"
+        
+        # Serialize package data
+        package_data = PackageSerializer(package).data
+        package_data["crypto_amount"] = updated_crypto_amount  # Ensure crypto amount is updated
+        package_data["message"] = message  # Include dynamic message
 
-        serialized_packages.append(PackageSerializer(package).data)
+        serialized_packages.append(package_data)
 
     return Response(serialized_packages)
 
