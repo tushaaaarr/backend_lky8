@@ -71,9 +71,6 @@ def get_packages(request):
     return Response(serialized_packages)
 
 
-
-
-
 def create_nowpayments_crypto_payment(fiat_amount, fiat_currency, crypto_currency, booking_id):
     url = f"{NOWPAYMENTS_API_BASE}/invoice"
     headers = {
@@ -272,10 +269,12 @@ def userinfo_with_orders(request):
             user = user_serializer.save()
         else:
             user_serializer = UserInfoSerializer(user)
-
+            
         # ✅ Create the order (Extract price details from Package)
         order_data = request.data.get("order", {})
         order, order_errors = create_order(user.id, order_data)
+        order.status = "pending"
+        order.save()
 
         if not order:
             return Response({
@@ -289,9 +288,8 @@ def userinfo_with_orders(request):
             fiat_amount=order.fiat_amount,    # Fetched from Package
             fiat_currency=order.fiat_currency, 
             crypto_currency=order.crypto_currency,
-            booking_id=str(order.id),
+            booking_id=str(order.order_id),
         )
-
         if not payment_response:
             return Response({
                 "status_code": status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -303,7 +301,7 @@ def userinfo_with_orders(request):
         payment = CryptoPayment.objects.create(
             order_id=order,
             currency=order.crypto_currency,
-            initiated_crypto_amount=payment_response.get("pay_amount"),
+            initiated_crypto_amount=order.crypto_amount,
             price_amount=payment_response.get("price_amount"),
             price_currency=payment_response.get("price_currency"),
             invoice_url=payment_response.get("invoice_url"),
@@ -375,11 +373,13 @@ def payment_webhook(request):
         payout_tx_hash = payload.get("payout_hash")
         pay_currency = payload.get("pay_currency")
         pay_amount = payload.get("pay_amount")
+        actually_paid = payload.get("actually_paid")
 
         logger.debug(f"Processing payment for order: {order_id}, status: {payment_status}")
 
         # Fetch Order and Payment Record
         order = Order.objects.filter(order_id=order_id).first()
+        print(order)
         if not order:
             logger.debug(f"No order found for order_id: {order_id}")
             return JsonResponse({"error": "Order not found"}, status=404)
@@ -400,11 +400,13 @@ def payment_webhook(request):
         payment.status = payment_status
         payment.price_amount = price_amount
         payment.price_currency = price_currency
-        payment.paid_crypto_amount = pay_amount
+        payment.paid_crypto_amount = actually_paid
         payment.save()
 
         # Handle Payment Statuses
         if payment_status == "finished":  # ✅ Successful Payment
+            order.status = "completed"
+            order.save()
             logger.debug(f"Payment {order_id} completed successfully.")
         elif payment_status in ["failed", "expired"]:  # ❌ Failed Payment
             logger.debug(f"Payment {order_id} failed or expired.")

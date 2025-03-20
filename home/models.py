@@ -38,10 +38,16 @@ class UserInfo(models.Model):
 
 
 class Order(models.Model):
+    ORDER_STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('completed', 'Completed'),
+        ('cancelled', 'Cancelled'),
+    ]
+    status = models.CharField(max_length=20, choices=ORDER_STATUS_CHOICES, default='pending')
     user = models.ForeignKey(UserInfo, on_delete=models.CASCADE, related_name="orders")
     package = models.ForeignKey(Package, on_delete=models.CASCADE)  # Link to package
-    order_id = models.CharField(max_length=36, unique=True, editable=False, default=uuid.uuid4)
-    
+    # order_id = models.CharField(max_length=36, unique=True, editable=False, default=uuid.uuid4)
+    order_id = models.CharField(max_length=36, unique=True, editable=False, default=lambda: str(uuid.uuid4()))
     # Automatically fetch details from the package
     entries = models.IntegerField()
     crypto_amount = models.DecimalField(max_digits=10, decimal_places=8)  # Price in BTC

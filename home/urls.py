@@ -6,4 +6,7 @@ urlpatterns = [
     path("packages/", views.get_packages, name="get_packages"),
     path('create-order/', userinfo_with_orders, name='userinfo_with_orders'),
     path('orders/<str:id>/', user_orders, name='user_orders'), 
+
+
+    path('lky8/webhook/check-payment-status/', views.payment_webhook, name='payment_webhook'),
 ]
