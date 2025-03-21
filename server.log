@@ -119,3 +119,42 @@ INFO 2025-03-21 12:01:00,336 autoreload /Users/tushaaaarr/Desktop/LKY8/backend/h
 INFO 2025-03-21 12:01:00,679 autoreload Watching for file changes with StatReloader
 INFO 2025-03-21 12:01:26,567 autoreload /Users/tushaaaarr/Desktop/LKY8/backend/LKY/settings.py changed, reloading.
 INFO 2025-03-21 12:01:26,919 autoreload Watching for file changes with StatReloader
+INFO 2025-03-21 14:20:00,934 autoreload Watching for file changes with StatReloader
+INFO 2025-03-21 14:20:04,659 basehttp "GET /admin/ HTTP/1.1" 302 0
+INFO 2025-03-21 14:20:04,683 basehttp "GET /admin/login/?next=/admin/ HTTP/1.1" 200 4160
+INFO 2025-03-21 14:20:10,048 basehttp "POST /admin/login/?next=/admin/ HTTP/1.1" 302 0
+INFO 2025-03-21 14:20:10,068 basehttp "GET /admin/ HTTP/1.1" 200 8465
+INFO 2025-03-21 14:20:12,023 basehttp "GET /admin/home/package/ HTTP/1.1" 200 10953
+INFO 2025-03-21 14:20:12,067 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-03-21 14:20:15,565 basehttp "POST /admin/home/package/ HTTP/1.1" 200 14510
+INFO 2025-03-21 14:20:17,683 basehttp "POST /admin/home/package/ HTTP/1.1" 302 0
+INFO 2025-03-21 14:20:17,702 basehttp "GET /admin/home/package/ HTTP/1.1" 200 9212
+INFO 2025-03-21 14:20:17,732 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-03-21 14:20:17,766 basehttp "GET /static/admin/img/icon-yes.svg HTTP/1.1" 200 436
+INFO 2025-03-21 14:20:34,687 autoreload Watching for file changes with StatReloader
+INFO 2025-03-21 14:21:39,249 basehttp "GET /admin/home/package/ HTTP/1.1" 200 10953
+INFO 2025-03-21 14:21:39,293 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+WARNING 2025-03-21 14:21:39,337 log Not Found: /favicon.ico
+WARNING 2025-03-21 14:21:39,338 basehttp "GET /favicon.ico HTTP/1.1" 404 3300
+INFO 2025-03-21 14:21:39,338 basehttp - Broken pipe from ('127.0.0.1', 56219)
+INFO 2025-03-21 14:21:40,445 basehttp "GET /admin/home/package/6/change/ HTTP/1.1" 200 15967
+INFO 2025-03-21 14:21:40,486 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-03-21 14:21:40,492 basehttp "GET /static/admin/css/forms.css HTTP/1.1" 200 8794
+INFO 2025-03-21 14:21:42,635 basehttp "GET /admin/home/package/ HTTP/1.1" 200 10953
+INFO 2025-03-21 14:21:43,585 basehttp "GET /admin/home/package/5/change/ HTTP/1.1" 200 15974
+INFO 2025-03-21 14:21:43,618 basehttp "GET /static/admin/css/forms.css HTTP/1.1" 200 8794
+INFO 2025-03-21 14:21:43,620 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-03-21 14:22:36,077 basehttp "GET /admin/home/package/5/change/ HTTP/1.1" 200 15974
+INFO 2025-03-21 14:22:36,109 basehttp "GET /static/admin/css/forms.css HTTP/1.1" 200 8794
+INFO 2025-03-21 14:22:36,112 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+WARNING 2025-03-21 14:22:36,148 log Not Found: /favicon.ico
+INFO 2025-03-21 14:22:36,148 basehttp - Broken pipe from ('127.0.0.1', 56224)
+WARNING 2025-03-21 14:22:42,751 log Not Found: /
+WARNING 2025-03-21 14:22:42,752 basehttp "GET / HTTP/1.1" 404 3249
+WARNING 2025-03-21 14:22:42,800 log Not Found: /favicon.ico
+WARNING 2025-03-21 14:22:42,800 basehttp "GET /favicon.ico HTTP/1.1" 404 3300
+INFO 2025-03-21 14:22:49,853 basehttp "GET /packages/ HTTP/1.1" 200 7014
+INFO 2025-03-21 14:24:01,409 basehttp "GET /packages/ HTTP/1.1" 200 7012
+INFO 2025-03-21 14:25:51,873 autoreload /Users/tushaaaarr/Desktop/LKY8/backend/home/views.py changed, reloading.
+INFO 2025-03-21 14:25:52,356 autoreload Watching for file changes with StatReloader
+INFO 2025-03-21 14:26:05,391 basehttp "GET /packages/ HTTP/1.1" 200 7014

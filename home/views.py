@@ -44,25 +44,32 @@ def fiat_crypto_nowpayments(amount, currency_from, currency_to, retries=3, delay
     raise Exception("Exceeded maximum retries for conversion.")
 
 
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+from home.models import Package
+from home.serializers import PackageSerializer
+import concurrent.futures
+
 @api_view(["GET"])
 def get_packages(request):
     packages = Package.objects.all()
     serialized_packages = []
 
-    for package in packages:
+    def fetch_updated_crypto(package):
+        """Helper function to fetch updated crypto amount safely."""
         try:
-            # Fetch real-time crypto amount
-            updated_crypto_amount = fiat_crypto_nowpayments(package.fiat_amount, package.fiat_currency, package.crypto_currency)
-            package.crypto_amount = updated_crypto_amount  # Update dynamically
-            
-            # Generate a dynamic message
-            message = f"Get {package.entries} entries for just {updated_crypto_amount} {package.crypto_currency}!"
-        except Exception as e:
-            # Use the stored crypto amount if API fails
-            updated_crypto_amount = package.crypto_amount
-            message = f"Get {package.entries} entries for just {package.crypto_amount} {package.crypto_currency}!"
-        
-        # Serialize package data
+            return fiat_crypto_nowpayments(package.fiat_amount, package.fiat_currency, package.crypto_currency)
+        except Exception:
+            return package.crypto_amount  # Fallback to stored amount if API fails
+
+    # Use ThreadPoolExecutor to fetch API responses concurrently
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        updated_crypto_amounts = list(executor.map(fetch_updated_crypto, packages))
+
+    # Process and serialize package data
+    for package, updated_crypto_amount in zip(packages, updated_crypto_amounts):
+        message = f"Get {package.entries} entries for just {updated_crypto_amount} {package.crypto_currency}!"
+
         package_data = PackageSerializer(package).data
         package_data["crypto_amount"] = updated_crypto_amount  # Ensure crypto amount is updated
         package_data["message"] = message  # Include dynamic message
@@ -70,6 +77,7 @@ def get_packages(request):
         serialized_packages.append(package_data)
 
     return Response(serialized_packages)
+
 
 
 @csrf_exempt  # ✅ Disable CSRF protection
