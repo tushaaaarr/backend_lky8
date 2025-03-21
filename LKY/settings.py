@@ -154,6 +154,7 @@ CORS_ORIGIN_WHITELIST = (
     'http://localhost:3000',
     'http://127.0.0.1:3000',
     "https://lky8.win",
+    "http://13.60.226.208",
     "https://www.lky8.win",
     "https://api.lky8.win",
 )

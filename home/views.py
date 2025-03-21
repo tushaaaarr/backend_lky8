@@ -15,7 +15,8 @@ load_dotenv()  # Load .env variables
 NOWPAYMENTS_APIKEY = os.getenv('NOWPAYMENTS_APIKEY')
 NOWPAYMENTS_API_BASE = "https://api.nowpayments.io/v1"
 NOWPAYMENTS_SECRET_KEY = os.getenv("NOWPAYMENTS_SECRET_KEY")
-
+# FRONT_BASEURL = "https://lky8.win"
+FRONT_BASEURL = "http://13.60.226.208"
 import json
 import logging
 import hmac
@@ -95,9 +96,13 @@ def create_nowpayments_crypto_payment(fiat_amount, fiat_currency, crypto_currenc
         "price_amount": float(fiat_amount),  # Convert fiat amount to float
         "price_currency": fiat_currency,  # Fiat currency (USD, EUR, etc.)
         "pay_currency": crypto_currency,  # Crypto currency (BTC, ETH, USDT, etc.)
+        # "ipn_callback_url": "https://api.lky8.win/lky8/webhook/check-payment-status/",
+        # "success_url": f"https://lky8.win/payment/success/{booking_id}",
+        # "cancel_url": f"https://lky8.win/payment/failure/",
+
         "ipn_callback_url": "https://api.lky8.win/lky8/webhook/check-payment-status/",
-        "success_url": f"https://lky8.win/payment/success/{booking_id}",
-        "cancel_url": f"https://lky8.win/payment/failure/",
+        "success_url": f"{FRONT_BASEURL}/payment/success/{booking_id}",
+        "cancel_url": f"{FRONT_BASEURL}/payment/failure/",
         "order_id": booking_id,
         "order_description": f"Payment for booking {booking_id}",
         "is_fixed_rate": True  # Ensures exact crypto amount is required
@@ -388,7 +393,7 @@ def payment_webhook(request):
         pay_currency = payload.get("pay_currency")
         pay_amount = payload.get("pay_amount")
         actually_paid = payload.get("actually_paid", 0)  # Default to 0 if None
-        
+
         logger.debug(f"Processing payment for order: {order_id}, status: {payment_status}")
 
         # Fetch Order and Payment Record
